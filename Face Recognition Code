@@ -1,0 +1,27 @@
+from microbit import display, Image, sleep
+import cv2
+import numpy as np
+
+# Load pre-trained face cascade
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
+# Initialize vision sensor (adjust port as needed)
+cap = cv2.VideoCapture(0)
+
+def detect_face():
+    ret, frame = cap.read()
+    if not ret:
+        return False
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    return len(faces) > 0
+
+# Main loop
+while True:
+    if detect_face():
+        display.show(Image.YES)
+    else:
+        display.show(Image.NO)
+    sleep(300)
+
+cap.release()
