@@ -1,0 +1,59 @@
+from microbit import display, Image, sleep
+import cv2
+import numpy as np
+
+# Load pre-trained face cascade
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+cap = cv2.VideoCapture(0)
+
+# Define face-number mapping and feature storage
+face_features = {}
+current_number = 1
+MAX_NUMBERS = 3
+
+def extract_features(face_roi):
+    # Simplified feature extraction
+    resized = cv2.resize(face_roi, (50, 50)).flatten()
+    return tuple(resized)
+
+# Define number images
+NUMBER_IMAGES = {
+    1: Image("00000:00000:00900:00000:00000"),
+    2: Image("99999:00009:99999:90000:99999"),
+    3: Image("99999:00009:99999:00009:99999")
+}
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        display.show(Image.ERROR)
+        sleep(500)
+        continue
+    
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    
+    if len(faces) > 0:
+        x, y, w, h = faces[0]
+        roi = gray[y:y+h, x:x+w]
+        features = extract_features(roi)
+        
+        if features not in face_features:
+            if current_number <= MAX_NUMBERS:
+                face_features[features] = current_number
+                current_number += 1
+                display.show(Image.HAPPY)
+                sleep(1000)
+        
+        # Display corresponding number
+        if features in face_features:
+            num = face_features[features]
+            display.show(NUMBER_IMAGES[num])
+        else:
+            display.show(Image.QUESTION)
+    else:
+        display.clear()
+    
+    sleep(300)
+
+cap.release()
