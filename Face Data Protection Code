@@ -1,0 +1,63 @@
+from microbit import display, Image, sleep
+import cv2
+import hashlib
+import numpy as np
+
+# Load face cascade and initialize sensor
+face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+cap = cv2.VideoCapture(0)
+
+# Store hashed features instead of raw data
+face_hashes = {}
+current_number = 1
+MAX_NUMBERS = 3
+
+def hash_features(face_roi):
+    # Extract features and compute SHA-256 hash
+    resized = cv2.resize(face_roi, (50, 50)).flatten()
+    hash_obj = hashlib.sha256(resized.tobytes())
+    return hash_obj.hexdigest()
+
+# Number images
+NUMBER_IMAGES = {
+    1: Image("00000:00000:00900:00000:00000"),
+    2: Image("99999:00009:99999:90000:99999"),
+    3: Image("99999:00009:99999:00009:99999")
+}
+
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        display.show(Image.ERROR)
+        sleep(500)
+        continue
+    
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    
+    if len(faces) > 0:
+        x, y, w, h = faces[0]
+        roi = gray[y:y+h, x:x+w]
+        face_hash = hash_features(roi)
+        
+        # Bind new hash to number
+        if face_hash not in face_hashes:
+            if current_number <= MAX_NUMBERS:
+                face_hashes[face_hash] = current_number
+                current_number += 1
+                display.show(Image.YES)
+                sleep(500)
+            else:
+                display.show(Image.NO)
+                sleep(500)
+                continue
+        
+        # Display number
+        num = face_hashes[face_hash]
+        display.show(NUMBER_IMAGES[num])
+    else:
+        display.clear()
+    
+    sleep(300)
+
+cap.release()
