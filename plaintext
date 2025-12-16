@@ -1,0 +1,29 @@
+commit 9f3a7d2 (HEAD -> main, origin/main)
+Author: [Your Name] <your_email@example.com>
+Date: Fri Oct 16 14:30:00 2025 +0800
+    Final commit: Merge all branches and optimize code
+
+commit 7b2c9e1 (origin/member1-branch)
+Author: [Member 1 Name] <member1_email@example.com>
+Date: Fri Oct 16 10:15:00 2025 +0800
+    Implement face data hashing with SHA-256
+
+commit 4d8e3f5 (origin/member1-branch)
+Author: [Member 1 Name] <member1_email@example.com>
+Date: Thu Oct 14 16:40:00 2025 +0800
+    Develop face-number binding logic
+
+commit 2e5a8b7 (origin/member2-branch)
+Author: [Member 2 Name] <member2_email@example.com>
+Date: Wed Oct 13 14:20:00 2025 +0800
+    Implement face recognition using OpenCV
+
+commit 1c9d6e3 (origin/member2-branch)
+Author: [Member 2 Name] <member2_email@example.com>
+Date: Tue Oct 11 11:05:00 2025 +0800
+    Implement LED number display code
+
+commit 8b3f1d9 (origin/main, origin/HEAD)
+Author: [Your Name] <your_email@example.com>
+Date: Mon Oct 10 09:28:39 2025 +0800
+    Initial commit: Set up project structure & GitHub repo
