@@ -1,0 +1,16 @@
+from microbit import display, Image, sleep
+
+# Define number images for LED matrix
+NUMBER_IMAGES = {
+    1: Image("00000:00000:00900:00000:00000"),
+    2: Image("99999:00009:99999:90000:99999"),
+    3: Image("99999:00009:99999:00009:99999")
+}
+
+# Display numbers in sequence
+while True:
+    for num in [1, 2, 3]:
+        display.show(NUMBER_IMAGES[num])
+        sleep(1000)  # Pause for 1 second
+    display.clear()
+    sleep(500)
